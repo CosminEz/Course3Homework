@@ -1,10 +1,13 @@
 package com.example.cosmin.course3homework;
 
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,20 +18,25 @@ import android.widget.Toast;
 import com.example.cosmin.course3homework.Adapter.StudentAdapter;
 import com.example.cosmin.course3homework.Model.Student;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,RadioGroup.OnCheckedChangeListener{
-    private EditText nume;
-    private EditText prenume;
-    private EditText email;
-    private EditText telefon;
+    private EditText editTextNume;
+    private EditText editTextPrenume;
+    private EditText editTextMail;
+    private EditText editTextTelefon;
     private RadioGroup grupUniversitati;
     private RadioButton universitate;
     private Button salveazaButton;
-    private ListView listViewStudent;
-    private List<Student> listaStudenti;
-    private ImageView listViewCloseButton;
+    private CheckBox checkBoxOOP;
+    private CheckBox checkBoxCSHARP;
+    private CheckBox checkBoxJAVA;
+    private CheckBox checkBoxC;
+    public static final String EXTRA_MESSAGE = "student";
+
+
 
 
 
@@ -39,28 +47,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        nume=(EditText)findViewById(R.id.Nume);
-        prenume=(EditText)findViewById(R.id.Prenume);
-        email=(EditText)findViewById(R.id.Email);
-        telefon=(EditText)findViewById(R.id.Telefon);
+        editTextNume=(EditText)findViewById(R.id.Nume);
+        editTextPrenume=(EditText)findViewById(R.id.Prenume);
+        editTextMail=(EditText)findViewById(R.id.Email);
+        editTextTelefon=(EditText)findViewById(R.id.Telefon);
         grupUniversitati=(RadioGroup)findViewById(R.id.grupUniversitati);
         salveazaButton=(Button)findViewById(R.id.salveaza);
-        listViewStudent=(ListView)findViewById(R.id.lv_student);
-        listViewCloseButton=(ImageView)findViewById(R.id.im_close_button);
-
         grupUniversitati.setOnCheckedChangeListener(this);
+        checkBoxOOP=(CheckBox)findViewById(R.id.oop);
+        checkBoxJAVA=(CheckBox)findViewById(R.id.java);
+        checkBoxC=(CheckBox)findViewById(R.id.c);
+        checkBoxCSHARP=(CheckBox)findViewById(R.id.csharp);
 
-        listaStudenti=new ArrayList<>();
-        listaStudenti.add(new Student("Filote","Cosmin", "Universitatea din Bucuresti","0741048694"));
-        listaStudenti.add(new Student("Filote","Marcel", "Poli","0741048694"));
-        listaStudenti.add(new Student("Filote","Elena", "Universitatea din Pitesti","0741048694"));
-        listaStudenti.add(new Student("Budai","Denisa","Unibuc","0741048694"));
-        listaStudenti.add(new Student("Filote","Ciprian", "Galati","0741048694"));
+
 
 
 
         salveazaButton.setOnClickListener(this);
-        listViewCloseButton.setOnClickListener(this);
+
 
 
 
@@ -71,17 +75,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         if(v == salveazaButton){
-            StudentAdapter studentAdapter = new StudentAdapter(listaStudenti, MainActivity.this);
-            listViewStudent.setAdapter(studentAdapter);
-            listViewStudent.setVisibility(View.VISIBLE);
-            listViewCloseButton.setVisibility(View.VISIBLE);
-            Toast.makeText(this,"ai apasat pe salveaza",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, AfisareStudenti.class);
+            String nume=editTextNume.getText().toString().trim();
+            if(TextUtils.isEmpty(nume)) {
+                //email is empty
+                Toast.makeText(this,"Please enter a last name ", Toast.LENGTH_SHORT).show();
+                //stop the function to progress
+                return;
+            }
+            String prenume=editTextPrenume.getText().toString().trim();
+            if(TextUtils.isEmpty(prenume)) {
+                //email is empty
+                Toast.makeText(this,"Please enter a first name ", Toast.LENGTH_SHORT).show();
+                //stop the function to progress
+                return;
+            }
+            String mail=editTextMail.getText().toString().trim();
+            if(TextUtils.isEmpty(mail)) {
+                //email is empty
+                Toast.makeText(this,"Please enter an email address ", Toast.LENGTH_SHORT).show();
+                //stop the function to progress
+                return;
+            }
+            String telefon=editTextNume.getText().toString().trim();
+            if(TextUtils.isEmpty(telefon)) {
+                //email is empty
+                Toast.makeText(this,"Please enter a telephone ", Toast.LENGTH_SHORT).show();
+                //stop the function to progress
+                return;
+            }
+            StringBuilder cunostinte=new StringBuilder();
+            if(checkBoxOOP.isChecked())
+                cunostinte.append(checkBoxOOP.getText().toString().trim()+" ");
+            if(checkBoxJAVA.isChecked())
+                cunostinte.append(checkBoxJAVA.getText().toString().trim()+" ");
+            if(checkBoxC.isChecked())
+                cunostinte.append(checkBoxC.getText().toString().trim()+" ");
+            if(checkBoxCSHARP.isChecked())
+                cunostinte.append(checkBoxCSHARP.getText().toString().trim()+" ");
+
+            Student student = new Student (0,nume,prenume,universitate.getText().toString().trim(),mail,telefon,cunostinte);
+
+
+            intent.putExtra("student", student);
+
+            startActivity(intent);
         }
-        if(v == listViewCloseButton)
-        {
-            listViewStudent.setVisibility(View.GONE);
-            listViewCloseButton.setVisibility(View.GONE);
-        }
+
 
     }
 

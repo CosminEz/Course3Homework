@@ -69,7 +69,7 @@ public class StudentAdapter extends BaseAdapter implements View.OnClickListener{
 
         Student student = (Student) getItem(currentPosition);
         viewHolder.mNumePrenumeTextView.setText(student.getNume().toString()+" "+student.getPrenume());
-        viewHolder.mFacultateTextView.setText(student.getFacultate());
+        viewHolder.mFacultateTextView.setText(student.getuniversitate());
         viewHolder.mTelefonImagieView.setOnClickListener(this);
 
 
